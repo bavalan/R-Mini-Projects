@@ -1,0 +1,90 @@
+---
+title: ""
+output:
+  html_document:
+    df_print: paged
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+6a)
+
+```{r}
+library(tidyverse)
+library(smmr)
+```
+
+```{r}
+myurl="https://www.utsc.utoronto.ca/~butler/c32/mm.txt"
+MM=read_delim(myurl," ")
+MM
+```
+
+```{r}
+MM %>% count(gender)
+```
+
+There are 10 males and 10 female subjects.
+
+b)
+
+```{r}
+ggplot(MM,aes(x=gender,y=candies))+geom_boxplot()
+```
+
+c)
+
+Since we used a boxplot our centre will represent the median of each box and the spread will represent the interquartile range(IQR=Q3-Q1) of each box. The centre for the females is higher and is about 45 candies and for the males the centre is about 37 candies. The females eat about 8 candies more then the males. The spread of females is  about [(IQR=Q3-Q1)=(IQR=85-32)=53] 53 candies and the males spread is [(IQR=Q3-Q1)=(IQR=58-28)=19] 30 candies The females have a wider spread when it comes to the IQR, about 23 candies more. However there is an outlier for the males where one individual has eaten 111 candies.
+
+d)
+
+A two-sample t-test is not best for comparing the typical number of candies taken by people of each gender because of the outliers for the male. This is a problem because a two-sample t-test assumes the data to be normal, but a normal distribution dont have any outliers.
+
+e)
+
+```{r}
+median_test(MM,candies,gender)
+```
+
+The median test shows us that 6 females are above the median and 4 are below the median. The males are 4 above the median and 6 below the median. So the median is going to be high of 0.3710934 hence we do not reject the null hypothesis.
+
+
+10a)
+
+```{r}
+myurls="https://www.utsc.utoronto.ca/~butler/c32/coffee.txt"
+Coffee=read_delim(myurls," ")
+Coffee
+```
+
+
+b)
+```{r}
+ggplot(Coffee,aes(x=cup,y=tempdiff))+geom_boxplot()
+
+```
+
+c)
+
+```{r}
+JIm=aov(tempdiff~cup,data=Coffee) 
+summary(Coffee.aov)
+```
+
+This P-value is 0.0000277, which is way less than 0.05. So we reject the null hypothesis.
+
+d)
+
+```{r}
+Coffee.aov=aov(tempdiff~cup,data=Coffee)
+TukeyHSD(Coffee.aov)
+```
+
+e)
+
+The temperature between Nissan cups and any other cups are very high. This would mean Nissan cups are best to hold coffee in as they are the lowest temp drop rate.
+
+f)
+
+Its because we are doing three tests at once so the adjustments can't be trusted.

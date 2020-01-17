@@ -1,0 +1,82 @@
+---
+title: "Assignment 4"
+output:
+  html_document:
+    df_print: paged
+---
+
+Bavalan Thangarajah
+1002194564
+thanga29 
+
+9a)
+
+
+```{r}
+library(tidyverse)
+library(smmr)
+```
+
+```{r}
+myurl="http://www.utsc.utoronto.ca/~butler/c32/nbapoints.csv"
+NBA=read_csv(myurl)
+NBA
+```
+ I have data that contains the date of an NBA game and number of points scored on that day under the new rules.
+
+b) 
+```{r}
+ggplot(NBA,aes(x=Date,y=Points))+geom_boxplot()
+
+```
+ 
+c) The data within each date follow the line well so its distributed well.However there are many outliers, so the normality is questionable.Hence a one-sample t-test is best to determine if the increase of points scored in each game has increased. Since we are looking for improvement, the one-sample t-test is best.
+
+d)
+```{r}
+t.test(NBA$Points, mu=183.2)
+```
+The average of points scored before 1999 is 183.2. After new rules have been placed the average of points scored is 195.88. Since the p-value is equal to 0.004575 it is less than 0.05 so therefore we reject the null hypothesis. Hence the speed of the game has not increased.
+
+10a)
+
+```{r}
+myurl="https://www.utsc.utoronto.ca/~butler/c32/salaryinc.txt"
+Salary=read_delim(myurl," ")
+Salary
+```
+
+The data contains an Employee Letter and their 2 salaries from Jan 2016 and Jan 2017.
+
+b)
+
+A matched-pairs test is better because you are comparing the 2 salaries for an invididual employee. A two t-test is better if you are comparing 2 employees. However since you are comparing the two salaries of an invididual employee, a matched-pairs test is better.
+
+c)
+
+```{r}
+Salary = Salary %>% mutate(diff=jan2017-jan2016)
+Salary
+```
+```{r}
+ggplot(Salary,aes(sample=diff))+stat_qq()+stat_qq_line()
+```
+
+
+Most of the plots follow the line however there are many outliers, so the normality is questionable.
+
+d)
+
+```{r}
+with(Salary,t.test(jan2017,jan2016,paired=T))
+```
+
+That the average increase of salaries from 2016-2017 is 6.185 thousand dollars. Also since the p-value is very small of 2.271e-09 which is less 0.05 we reject the null hypothesis.
+
+e)
+
+```{r}
+t.test(Salary$diff,conf.level = 0.95)
+```
+
+With 95% confidence interval the increase of salaries from 2016-2017 is between 4.902231 - 7.467769 thousand dollars. The average of salary increase is 6.185 thousand dollars. The CEO should look at where it says "95 percent confidence interval:" to get a range of how much the salaries increased. He should also look at where it says "mean of x" to get the average salary increase.

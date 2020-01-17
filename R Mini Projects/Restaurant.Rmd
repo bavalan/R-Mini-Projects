@@ -1,0 +1,136 @@
+---
+title: "Restaurant"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(smmr)
+
+```
+
+Data
+```{r}
+myurls="http://www.utsc.utoronto.ca/~butler/c32/restaurant-tips.txt"
+Restaurant=read.delim(myurls)
+Restaurant
+```
+
+
+PLots
+
+
+We are currently trying to find which variables within the data affect the tip. We will be comparing the four variables Credit,Guests,Day and Server against the Percentage of the Tip. We have decided to go with the Percentage of the Tip because it shows the relation of Tip to Bill. If we were to compare with   the Tip  it may not prove our analysis very well. For example if the Bill1 was $5.00 and the Tip was $2.00 the tip percentage is a 40%. Let's say Bill2 is $0.50 and the Tip is $2.00 the percentage is 400%.Hence the Percentage Tip(PctTip) gives an accurate result of the tips. We have decided to use a median test for all of our analysis because many of our boxplots contain outliers.For our median test we have decied to use a 95% Confidence Interval because it is the most widely accepted and used confidence interval within the data science community, and since it was most prominently used by Fisher.
+
+
+
+
+
+  
+---------------------------------------------------------------------------------------
+Credit card x PctTip
+```{r}
+ggplot(Restaurant,aes(x=Credit,y=PctTip))+geom_boxplot()
+```
+The boxplot shows some outliers for guests that use credit cards and those who do not use credit cards.
+However, by looking at the boxplot we can visually see that the median of those who use credit cards tend to have a higher percentage tip than those who do not use credit cards to pay for the bill. However since there are many outliers we must use a median test because a t-test assumes normality.
+
+
+
+```{r}
+median_test(Restaurant,PctTip,Credit)
+
+```
+Null: There is no differece when paying by credit, does not affect the tip
+Alt : Does affect the tip
+
+  The boxplot shows some outliers hence we must use the medians test and when we do the medians test we get a p-value of 0.006050857 which is less than 0.05 hence we must use a pairwaise medians test.
+```{r}
+pairwise_median_test(Restaurant,PctTip,Credit)
+``` 
+
+  Since the p-value is less than 0.05 we then reject the Null hypothesis and therefore in the favour of the alternative hypothesis that paying buy credit cards does affect the tip.We have enough sufficent evidence such that paying by credit or not paying by credit does affect the percentage of the tip for the servers.
+
+
+---------------------------------------------------------------------------------------
+
+Days x PctTip
+
+```{r}
+ggplot(Restaurant,aes(x=Day,y=PctTip,colour=Day))+geom_boxplot()
+```
+The boxplot shows some outliers for the Days that the servers were tipped.
+However, by looking at the boxplot we can visually see that the median of the five days are relatively about the same. However since there are many outliers we must use a median test to be sure because a t-test assumes normality.
+
+```{r}
+Restaurant %>% group_by(Day) %>% summarise(Mean_Of_PctTips=mean(PctTip), Median_Of_PctTips=median(PctTip))
+```
+For further evidence, when we get the average(mean) of the Percentage of Tips(PctTip) for each of the five Days we can see that there is no significant difference, where the Percentage of Tips of each  Day ranges between 1-3%. The same can also be said about the median of Percentage of Tips(PctTip). To be sure we will conduct a median test because our data contains outliers.
+
+```{r}
+median_test(Restaurant,PctTip,Day)
+
+```
+
+Null: There is no differece in tips on the Day of being served, does not affect the tip
+Alt : Does affect the tip
+
+  Since the p-value of 0.4830721 is greater than 0.05 we do not reject the Null hypothesis and therefore we do not require a pairwise median test because we have enough sufficent evidence that the Day in which the guests tip does not affect the tip percentage.
+
+---------------------------------------------------------------------------------------
+
+Server x PctTip
+```{r}
+ggplot(Restaurant,aes(x=Server,y=PctTip,colour=Server))+geom_boxplot()
+```
+The boxplot shows some outliers for the Percentage of Tips for each Server.
+However, by looking at the boxplot we can visually see that the median of each of the 3 Servers are relatively about the same, so we can assume that they get the same amount of Tips. However since there are many outliers we must use a median test to be sure because a t-test assumes normality.
+
+```{r}
+Restaurant %>% group_by(Server) %>% summarise(Mean_Of_PctTips=mean(PctTip), Median_Of_PctTips=median(PctTip))
+```
+For further evidence, when we get the average(mean) of the Percentage of Tips(PctTip) for each of the Servers we can see that there is no significant difference, where the Percentage of Tips for each  Server ranges between 0-1%. The same can also be said about the median of Percentage of Tips(PctTip). To be sure we will conduct a median test because our data contains outliers
+```{r}
+median_test(Restaurant,PctTip,Server)
+```
+ 
+ 
+Null: There is no differece in tips for each Server, does not affect the tip
+Alt : Does affect the tip
+
+  Since the p-value of 0.1413957 is greater than 0.05 we do not reject the Null hypothesis and therefore we do not require a pairwise median test because we have enough sufficent evidence that the Server in which the guests tip does not affect the tip percentage.
+
+
+
+
+
+---------------------------------------------------------------------------------------
+Guests x PctTip
+```{r}
+ggplot(Restaurant,aes(x=Guests,y=PctTip,colour=as.factor(Guests)))+geom_boxplot()
+```
+The boxplot shows some outliers for the Percentage of Tips for the number of Guests served.
+However, by looking at the boxplot we can visually see that the median for the number of Guests served are relatively about the same, so we can assume that they give the same Percentage of Tips. However since there are many outliers we must use a median test to be sure because a t-test assumes normality.
+
+```{r}
+Restaurant %>% group_by(Guests) %>% summarise(mean=mean(PctTip), med=median(PctTip))
+```
+
+For further evidence, when we get the average(mean) of the Percentage of Tips(PctTip) for the number of Guests we can see that there is no significant difference, where the Percentage of Tips for the number of Guests ranges between 0-2%. The same can also be said about the median of Percentage of Tips(PctTip). To be sure we will conduct a median test because our data contains outliers
+
+```{r}
+median_test(Restaurant,PctTip,Guests)
+```
+ 
+ 
+ 
+
+Null: There is no differece in tip with the number of Guests being served, does not affect the tip
+Alt : Does affect the tip
+
+  Since the p-value of 0.4161959 is greater than 0.05 we do not reject the Null hypothesis and therefore we do not require a pairwise median test because we have enough sufficent evidence that the number of Guests does not affect the tip percentage.
+.
+---------------------------------------------------------------------------------------------
+
+Therefore by our tests we can assume that when guests pay by credit card there is a significant difference in the tip percentage. Those who pay by credit cards, tend to tip more.
+

@@ -1,0 +1,110 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+
+13a)
+```{r}
+library(tidyverse)
+library(smmr)
+```
+
+```{r}
+myurl="https://www.utsc.utoronto.ca/~butler/c32/texmex.txt"
+Mex=read_delim(myurl," ")
+Mex
+```
+
+Yes there all 5 locations each one with the number of cars passing by each location on each of the 10 different days and two of the observations were missing.
+
+b) 
+Our data is not tidy because we need one columns of number of cars passing by and one column labelling the location where each car is passing.
+
+c)
+```{r}
+(Mex %>% gather(Location,Cars,I:V) -> Mex2)
+```
+
+d)
+```{r}
+ggplot(Mex2,aes(x=Location,y=Cars))+geom_boxplot()
+```
+
+e)
+
+```{r}
+Mex3=aov(Cars~Location,data=Mex2)
+summary(Mex3)
+```
+
+This is a very small P-value so we reject the null hypothesis, so my conclusion is that the number of cars passing by each location are not all the same.
+
+f)
+Tukey’s method is useful when (i) we have run an analysis of variance and got a
+significant result and (ii) when we want to know which groups differ significantly from which.
+Both (i) and (ii) are true here. So a Tukey's method is appropriate.
+
+```{r}
+TukeyHSD(Mex3)
+```
+
+
+g)
+
+Location IV is the best place to set the Mexican restaurant because by looking at the Tukey method results, Location IV shows the biggest difference meaning that it is has the highest traffic density. This is good for a restaurant because this means alot of people are in the area, and more people in the area results in more potential customers.
+
+14)
+a)
+#The Boston Marathon
+
+##Introduction
+
+Today we will be looking at the Boston Marathon and the winning times of both men and women since the year of 1987. Given the data file marathon.csv we will be questioning wether or not the times of the winning athletes have gotten faster throughout the years. From the data given we have 3 columns; Gender, Year of winner, and the winners Time. The data contains 176 winners both Females and Males combined.
+
+b)
+```{r}
+myurls="https://www.utsc.utoronto.ca/~butler/c32/marathon.csv"
+Boston=read.csv(myurls)
+Boston
+```
+From the we can see that we have a sensible columns of the Gender of the winner, Year the winner have one and the Time of the winner. From the given data we can see the unit of the winning time is in hours. The reason I came to this conclusion is because the Boston Marathon would take hours to complete as a Marathon consists of several kilometers to complete.
+
+c)
+
+From our data we could also see that women have had a separate marathon only since the 1960s, but men have raced since the beginning. From the data we could see the first race for Men's happened in 1897 and for the Women's the first race happened in 1966. We can tell the women had a seperate race because in 1966 there was winner for the Men and winner for the Women.
+
+d)
+
+```{r}
+ggplot(Boston,aes(x=Year,y=WinTime,colour=Gender))+geom_point()
+```
+
+e)
+
+From the plot we can conclude that the time for the winners throughout the years for the Men and Women are both getting faster. We can see this as there is a descending curve of points for the Men and Women which is approching a time speed of 2 hours. Hence we can conclude that the time of the winners are getting faster for both Men and Women.
+
+f)
+
+```{r}
+WomData=Boston %>% filter(Gender=="Women")
+```
+
+```{r}
+Wom=ggplot(WomData,aes(x=Year,y=WinTime))+geom_point() + geom_smooth(method="lm")
+Wom
+```
+
+
+
+```{r}
+Boston.1=lm(WinTime~Year,data=WomData)
+summary(Boston.1)
+```
+
+No this is not the appropriate thing to do because the data is forming a curve so we shouldn't put a straight line.
+
+g)
+
+From our data we have learned that over the years of the Boston Marathon race, the winning times of both men and women have gotten much faster. We also have learned the females seperate race had began in 1966. So our next step would possibly be to fit a non-linear line to best predict the future win times of the women and or men races.

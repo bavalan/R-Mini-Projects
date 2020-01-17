@@ -1,0 +1,71 @@
+---
+title: "Assignment 2"
+output:
+  html_document:
+    df_print: paged
+---
+Bavalan Thangarajah
+1002194564
+thanga29 
+
+8a)
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+myurl="http://www.utsc.utoronto.ca/~butler/c32/car-speeds.csv"
+car_speed=read_csv(myurl)
+car_speed
+```
+
+Yes, we do have an appropriate number of observations of a 1000, which is a large amount to get information on the new speed limit. We also have two appropriate variables the car number to individualize each car and the car speed assigned to such car.
+
+b)
+
+```{r}
+ggplot(car_speed, aes(x=speed))+geom_histogram(bins=10)
+```
+
+
+c) The shape of the histograms distribution on speeds is rightly-skewed, the value of speeds is more clustered around the smaller values to the left ranging between 27mph-32mph.There is a longer tail to the right to explain why I believe this is rightly-skewed.
+
+
+d)
+```{r}
+car_speed %>% summarize(Q1=quantile(speed,0.85))
+```
+
+
+For the new speed I'll take the average speed between 27mph and 32mph.
+(32+27)/2 = 30mph I believe the new speed should be 30mph as it is the average from the rightly-skewed distribution as most of the cars drive within that range. Also when following Canada's rule for new speeds taking the 85% quantile of the speeds we get 32mph and when rounded 5mph we get 30mph which is the new speed I have suggested.
+
+9a)
+
+```{r}
+backurl="http://www.utsc.utoronto.ca/~butler/c32/Backpack.csv"
+backpack=read_csv(backurl)
+backpack
+```
+
+The name of the column containing the backpack weight divided by the body weight is called Ratio.
+
+b)
+```{r}
+ggplot(backpack, aes(x=Ratio))+geom_histogram(bins=10)
+```
+
+
+c) 
+```{r}
+t.test(backpack$Ratio)
+```
+Since a = 0.05 this is a 95% confidence interval that ranges from 0.06985583 to 0.08439510. Also from this data we can see that the mean of Body-Weight Ratio is 0.07712546 which is less than 0.10. So the average student from Cal Poly is carrying less than 10% of their body weight.(0.10>0.07712546)
+
+d)
+```{r}
+t.test(backpack$Ratio,conf.level = 0.90 )
+```
+
+e) From observing this graph I do not have any concerns about the t-test. From observing the graph I can visually see that the average of the body-backpack weight ratio lies between 7%-9%, both t-test (95% and 90%) also give an interval range around 7%-9% stating that the mean of the ratio is 0.07712546. Therefore I have no concerns about using the t-test here.

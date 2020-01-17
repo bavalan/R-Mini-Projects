@@ -1,0 +1,58 @@
+---
+title: "Assignment 3"
+output: html_notebook
+---
+
+Bavalan Thangarajah
+1002194564
+thanga29 
+
+6a)
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+myurl="http://www.utsc.utoronto.ca/~butler/c32/thirty.csv"
+stop_watch=read_csv(myurl)
+stop_watch
+```
+
+Yes I have both columns time and gender.
+
+b)
+
+```{r}
+ggplot(stop_watch,aes(x=gender,y=time))+geom_boxplot()
+```
+
+c)
+
+Since we used a boxplot our centre will represent the median of each box and the spread will represent the interquartile range(IQR=Q3-Q1) of each box. The centre for the females is higher and is about 29s and for the males the centre is about 27s. The females are 1s closer to the required stop time of 30s then the males where they stop around 27s. The spread of females is  about [(IQR=Q3-Q1)=(IQR=37-23)=14] 14 and the males spread is [(IQR=Q3-Q1)=(IQR=39-20)=19] 19. The males have a wider spread when it comes to the IQR, 5s more.
+
+d)
+
+```{r}
+t.test(time~gender,data=stop_watch)
+```
+
+From the Welch Two Sample t-test the mean of the females is 29.9533s and the males mean of guessed time is 28.37333s. The mean of the females is higher then the males. The females spread is 14, which is a low number meaning the the mean of the female is more accurate then the male which is 19 a higher number.
+
+e) 
+The data we have do not help us address this claim of females are better with the stop watch because the spread of males are higher. The mean is therefore affected for males because you have errors of very high values such as 51s and and low values such as 15s that affect the mean. I would reorgranize this data by only taking values that are 5 seconds within the stoptime (25s-35s) inorder to avoid obscure stop times such as 51s.
+
+7a)
+
+```{r}
+power.t.test(n=6,delta=0.005,sd=0.005,type="one.sample")
+```
+b)
+
+```{r}
+power.t.test(n=13,delta=0.005,sd=0.005,type="one.sample")
+```
+
+In order to bring the power to 0.90 you must sample at least 13 leaves.
+
+c)
